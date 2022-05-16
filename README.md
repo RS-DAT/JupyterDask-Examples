@@ -1,2 +1,3 @@
 # JupyterDask-Examples
-Collection of examples for RS-DAT JupyterDask deployments
+
+Collection of examples for RS-DAT JupyterDask deployments.
