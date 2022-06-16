@@ -1,12 +1,11 @@
 name: jupyter_dask
 
-channels:
-  - conda-forge
-
 dependencies:
   - python=3.9
   - dask[complete] 
-  - jupyterlab
+  - dask-jobqueue
+  - jupyterlab>=3
+  - dask-labextension
   - gdal
   - xarray
   - rioxarray
