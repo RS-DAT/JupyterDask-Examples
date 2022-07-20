@@ -10,8 +10,8 @@ dependencies:
   - xarray
   - rioxarray
   - matplotlib 
+  - netCDF4
   - pip
   - pip:
-    - pystac-client==0.3.2
     - stac2dcache
 
