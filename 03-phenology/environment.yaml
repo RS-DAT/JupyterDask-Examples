@@ -10,7 +10,7 @@ dependencies:
   - xarray
   - rioxarray
   - matplotlib 
-  - netCDF4
+  - h5netcdf
   - pip
   - pip:
     - stac2dcache
