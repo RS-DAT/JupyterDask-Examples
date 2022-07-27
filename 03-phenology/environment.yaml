@@ -11,6 +11,7 @@ dependencies:
   - rioxarray
   - matplotlib 
   - h5netcdf
+  - zarr
   - pip
   - pip:
     - stac2dcache
