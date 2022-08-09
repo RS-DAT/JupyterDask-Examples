@@ -2,7 +2,8 @@ name: jupyter_dask
 
 dependencies:
   - python=3.9
-  - dask[complete] 
+  # pin Dask version until https://github.com/dask/distributed/pull/6841 is released
+  - dask[complete]==2022.7.0
   - dask-jobqueue
   - jupyterlab>=3
   - dask-labextension
@@ -10,10 +11,12 @@ dependencies:
   - gdal
   - xarray
   - rioxarray
+  - xarray-spatial
   - matplotlib 
   - h5netcdf
   - zarr
   - pip
   - pip:
+    - clustering-geodata-cubes
     - stac2dcache
 
