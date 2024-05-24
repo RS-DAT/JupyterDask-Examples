@@ -1,0 +1,28 @@
+name: emulator
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.9.16
+  - dask[complete]
+  - dask-jobqueue
+  - jupyterlab>=3,<4
+  - dask-labextension
+  - jupyterlab-git
+  - python-graphviz
+  - gdal
+  - pandas
+  - numpy
+  - matplotlib
+  - joblib
+  - rasterio
+  - xarray==2022.9.0
+  - scikit-learn==1.2.2
+  - rioxarray
+  - geopandas
+  - shapely
+  - pip
+  - zarr
+  - pip:
+     - pystemmusscope
