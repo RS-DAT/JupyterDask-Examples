@@ -6,7 +6,9 @@ channels:
 dependencies:
   - python=3.9.16
   - dask[complete]
+  - dask-expr
   - dask-jobqueue
+  - dask-ml
   - jupyterlab>=3,<4
   - dask-labextension
   - jupyterlab-git
