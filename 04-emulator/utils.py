@@ -1,5 +1,12 @@
 """Util functions """
 
+import numpy as np
+import xarray as xr
+import pandas as pd
+import dask
+import dask.array as da
+from datetime import datetime, timedelta
+
 def era5_preprocess(ds):    
     # Convert the longitude coordinates from [0, 360] to [-180, 180]
     ds = ds.assign_coords(longitude=(((ds.longitude + 180) % 360) - 180))
@@ -58,25 +65,25 @@ def era5land_accumulated_vars(ds, input_name, output_name, scale_factor):
     
     return ds
 
-def map_landcover_to_igbp(landcover_block):
+def map_landcover_to_igbp(landcover_block, lookup_table):
     # Create a new DataArray with "no data" to hold the mapped values 
-    mapped_block = xr.full_like(landcover_block, fill_value="No data", dtype="U7")
+    mapped_block = da.full_like(landcover_block, fill_value="No data", dtype="U7")
 
     # For each key-value pair in the lookup table
     for key, value in lookup_table.items():
         # Where the landcover_block equals the current key, assign the corresponding value
-        mapped_block = xr.where(landcover_block == key, value, mapped_block)
+        mapped_block = da.where(landcover_block == key, value, mapped_block)
     
     return mapped_block
         
 
-def landcover_to_igbp(ds, landcover_var_name, encoder):
+def landcover_to_igbp(ds, landcover_var_name, encoder, lookup_table, igbp_class):
     landcover = ds[landcover_var_name]
     
     # Replace NaN values with "No data" or 255 in the table
     landcover = da.where(da.isnan(landcover), 255, landcover)
     
-    igbp = map_landcover_to_igbp(landcover)
+    igbp = map_landcover_to_igbp(landcover, lookup_table)
     igbp_reshaped = igbp.reshape(-1, 1)
 
     transformed = encoder.transform(igbp_reshaped)
@@ -95,8 +102,8 @@ def landcover_to_igbp(ds, landcover_var_name, encoder):
 def training_testing_preprocess(df):
     #filter the outliers
     df = df[(df['LEtot'] < 750) & (df['LEtot'] > -10)]
-    df = df[(input_df['Htot'] < 750) & (df['Htot'] > -500)]
-    df = df[input_df['Actot']>-10]
+    df = df[(df['Htot'] < 750) & (df['Htot'] > -500)]
+    df = df[df['Actot']>-10]
 
     # remove nan
     df = df.dropna()
@@ -107,24 +114,32 @@ def igbp_to_landcover(df, encoder, igbp_class):
     
     # Unsorted categories are not yet supported by dask-ml
     igbp_stemmus_scope = np.sort(igbp_class.reshape(-1,1))
-    encoder = encoder.fit(igbp_stemmus_scope) 
+    encoder = encoder.fit(igbp_stemmus_scope)
+    
+    if isinstance(df, pd.DataFrame):
+        igbp = df['IGBP_veg_long'].to_numpy().reshape(-1, 1)
+    elif isinstance(df, dask.dataframe.DataFrame):
+        igbp = df['IGBP_veg_long'].to_dask_array(lengths=True).reshape(-1, 1)
 
-    igbp = df['IGBP_veg_long'].to_dask_array(lengths=True).reshape(-1, 1)
     transformed = encoder.transform(igbp)
 
     for i in range(transformed.shape[1]):
         df[f"IGBP_veg_long{i+1}"] = transformed[:, i]
+    
     df = df.drop('IGBP_veg_long', axis=1)
     return df
 
 
-def df_to_ds(df, input_ds):
+def arr_to_ds(arr, input_ds, output_vars):
     
     output_ds = xr.Dataset(coords=input_ds.coords)
     ds_shape = (output_ds.sizes['time'], output_ds.sizes['latitude'], output_ds.sizes['longitude'])
 
     for i, name in enumerate(output_vars):
-        output_ds[name] = (("time", "latitude", "longitude"), df[:, i].reshape(ds_shape))
+        if arr.ndim == 1:
+            output_ds[name] = (("time", "latitude", "longitude"), arr.reshape(ds_shape))
+        else:
+            output_ds[name] = (("time", "latitude", "longitude"), arr[:, i].reshape(ds_shape))
 
     # mask nan values
     ds_masked = output_ds.where(input_ds["Rin"].notnull())
