@@ -4,7 +4,6 @@ channels:
   - conda-forge
 
 dependencies:
-  - python=3.9.16
   - dask[complete]
   - dask-expr
   - dask-jobqueue
@@ -19,7 +18,7 @@ dependencies:
   - matplotlib
   - joblib
   - rasterio
-  - xarray==2022.9.0
+  - xarray
   - scikit-learn==1.2.2
   - rioxarray
   - geopandas
