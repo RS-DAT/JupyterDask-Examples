@@ -4,7 +4,7 @@ channels:
   - conda-forge
 
 dependencies:
-  - dask[complete]
+  - dask[complete]==2022.7.0
   - dask-expr
   - dask-jobqueue
   - dask-ml
