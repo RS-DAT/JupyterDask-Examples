@@ -4,6 +4,7 @@ channels:
   - conda-forge
 
 dependencies:
+  - python=3.9
   - dask[complete]
   - dask-expr
   - dask-jobqueue
@@ -19,6 +20,7 @@ dependencies:
   - joblib
   - rasterio
   - xarray
+  - h5netcdf
   - scikit-learn==1.2.2
   - rioxarray
   - geopandas
