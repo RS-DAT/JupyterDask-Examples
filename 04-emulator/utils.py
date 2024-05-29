@@ -44,6 +44,13 @@ def fix_time(ds, start_time):
     return ds
 
 
+def remove_encoding(ds):
+    # Remove global encoding
+    for var in ds.variables:
+        ds[var].encoding = {}
+    return ds
+
+
 def interpolation(ds, other):
     # in time
     ds_interpolated = ds.interp(coords={"time": other["time"]}, method='nearest', kwargs={"fill_value": "extrapolate"})
