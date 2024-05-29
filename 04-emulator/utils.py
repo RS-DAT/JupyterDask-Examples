@@ -45,7 +45,6 @@ def fix_time(ds, start_time):
 
 
 def remove_encoding(ds):
-    # Remove global encoding
     for var in ds.variables:
         ds[var].encoding = {}
     return ds
