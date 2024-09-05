@@ -4,5 +4,5 @@ This example includes a Jupyter notebook that illustrates how to filter/sample l
 
 ## Additional dependencies 
 
-The example requires the packages listed in the [conda environment file](./environment.yaml) provided in this folder.  
+The example requires the packages listed in the [conda environment file](https://github.com/RS-DAT/JupyterDask-Examples/blob/main/02-AHN3-filtering/environment.yaml) provided in this folder.  
 

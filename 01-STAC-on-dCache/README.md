@@ -8,5 +8,5 @@ This example includes two Jupyter notebooks that illustrate how to:
 
 ## Additional dependencies 
 
-The example requires the packages listed in the [conda environment file](./environment.yaml) provided in this folder.  
+The example requires the packages listed in the [conda environment file](https://github.com/RS-DAT/JupyterDask-Examples/blob/main/01-STAC-on-dCache/environment.yaml) provided in this folder.
 
